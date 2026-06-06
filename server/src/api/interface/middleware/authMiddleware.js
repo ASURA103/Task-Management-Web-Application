@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import env from "../../../infrastructure/env";
+import env from "../../../infrastructure/env.js";
 
 function authMiddleware(req, res, next) {
   try {
@@ -13,7 +13,7 @@ function authMiddleware(req, res, next) {
 
     const token = authorization.split(" ")[1];
 
-    const verification = jwt.verify(token, env.JWT_KEY);
+    const verification = jwt.verify(token,env.JWT_KEY);
 
     req.userId = verification.id; 
 

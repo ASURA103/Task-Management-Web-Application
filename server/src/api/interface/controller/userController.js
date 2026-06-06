@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../../config/schema/userSchema.js";
 import { registerValidator } from "../../config/validators/validators.js";
 import env from "../../../infrastructure/env.js";
+import { id } from "zod/v4/locales";
 
 // -------------------- REGISTER USER ---------------------
 
@@ -15,7 +16,7 @@ export const register = async (req, res)=>{
         const result = registerValidator.safeParse(body);
         if(!result.success){
             return res.status(400).json({
-                message: result.error.errors.mao((e)=> e.message),
+                message: result.error.errors.map((e)=> e.message),
             })
         } 
 
@@ -39,16 +40,17 @@ export const register = async (req, res)=>{
             password: hashPassword
         });
 
-        const token =jwt.sign({ id: user._id},env.JWT_KEY, {expiresIn: "id"})
+        const token =jwt.sign({ id: user._id},env.JWT_KEY, {expiresIn: "1d"})
 
         res.status(201).json({
             message: "User registered successfully",
             token,
             user:{
+                id: user._id,
                 name: user.name,
-                email: user.email,
-                token: token
+                email: user.email
             }
+            
         });
     } catch (error) {
        console.log("error while registering ", error);
@@ -58,3 +60,83 @@ export const register = async (req, res)=>{
  
     })}
 }
+
+//-------------------- LOGIN USER ------------------------
+
+export const login = async(req, res)=>{
+    const body = req.body
+try {
+    const user = await User.findOne({email: body.email});
+
+    if (!user){
+        return res.status(404).json({
+            message: " User not found "
+        });
+    }
+     const pass = await bcrypt.compare(body.password, user.password);
+
+     if (!pass){
+        return res.status(401).json({
+            message: "Incorrect Password !"
+        })
+     }
+     const token = jwt.sign(
+        {id: user._id},
+        env.JWT_KEY,
+        { expiresIn: "1d" }
+     )
+     return res.status(200).json({
+        message: "Login successfully",
+        token,
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email
+        }
+     })
+
+
+} catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+
+    
+}
+
+}
+
+
+export const deleteUser = async(req, res)=>{
+     const userId = req.userId;
+    try {
+
+        const user = await User.findById(userId)
+        
+        if (!user){
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+        
+        await User.findByIdAndDelete(userId)
+        return res.status(200).json({
+            message: "User account deleted successfully",
+            name: user.name,
+            email: user.email
+        })
+    } catch (error) {
+         return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+    }
+
+}
+
+
+
+
+
+
