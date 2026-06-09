@@ -5,24 +5,38 @@ function authMiddleware(req, res, next) {
   try {
     const authorization = req.headers.authorization;
 
-    if (!authorization || !authorization.startsWith("Bearer")) {
+    if (!authorization) {
       return res.status(401).json({
-        msg: "Token required",
+        message: "Authorization header missing",
       });
     }
 
-    const token = authorization.split(" ")[1];
+    const parts = authorization.split(" ");
 
-    const verification = jwt.verify(token,env.JWT_KEY);
+    if (parts.length !== 2 || parts[0] !== "Bearer") {
+      return res.status(401).json({
+        message: "Invalid token format",
+      });
+    }
 
-    req.userId = verification.id; 
+    const token = parts[1];
+
+    const decoded = jwt.verify(token, env.JWT_KEY);
+
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({
+        message: "Invalid token payload",
+      });
+    }
+
+    req.userId = decoded.id;
 
     next();
   } catch (error) {
     console.log("error in auth middleware", error);
 
     return res.status(401).json({
-      msg: "Invalid or expired token",
+      message: "Invalid or expired token",
     });
   }
 }
