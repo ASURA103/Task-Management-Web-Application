@@ -4,9 +4,9 @@ A modern, full-stack Task Management Web Application built using the MERN stack 
 TaskFlow is designed for productivity, allowing users to create, organize, prioritize, and track tasks with a clean UI, secure authentication, and scalable backend architecture.
 
 📸 Preview
-[LIGHT MODE](public/demoIMG.png)
-[DARK MODE ](public/demoIMG1.png) !
-[DEMO VIDEO](public/TaskManager-DEMO.png) !
+[DEMO VIDEO](Taskmanager_Demo/TaskManager-DEMO.png) !
+[LIGHT MODE](Taskmanager_Demo/demoIMG.png)
+[DARK MODE ](Taskmanager_Demo/demoIMG1.png) !
 
 
 Landing Page
