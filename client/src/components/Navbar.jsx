@@ -42,13 +42,13 @@ export default function Navbar({
           {token && (
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-1.5 md:p-2 rounded-xl hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800 transition"
+              className="p-1.5 md:p-2 rounded-xl cursor-pointer hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800 transition"
             >
               <Menu size={20} className="md:w-6 md:h-6" />
             </button>
           )}
 
-          <Link to={token ? "/dashboard" : "/"} className="flex items-center">
+          <Link to={token ? "/dashboard" : "/"} className="flex cursor-pointer items-center">
             <img src="logo.png" alt="logo" className="h-10 md:h-14" />
 
             <div className="ml-1 select-none">
@@ -89,7 +89,7 @@ export default function Navbar({
           {/* THEME */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl hover:bg-slate-100 dark:text-amber-500 dark:hover:bg-slate-800 transition"
+            className="p-2 rounded-xl cursor-pointer hover:bg-slate-100 dark:text-amber-500 dark:hover:bg-slate-800 transition"
           >
             {theme === "dark" ? <Sun /> : <Moon />}
           </button>
@@ -99,14 +99,14 @@ export default function Navbar({
             <div className="flex gap-2 md:gap-3">
               <button
                 onClick={openLogin}
-                className="font-semibold text-sm md:text-base hover:text-cyan-500"
+                className="font-semibold cursor-pointer text-sm md:text-base hover:text-cyan-500"
               >
                 Login
               </button>
 
               <button
                 onClick={openRegister}
-                className="px-3 md:px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-sm md:text-base transition"
+                className="px-3 cursor-pointer md:px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-sm md:text-base transition"
               >
                 Register
               </button>
@@ -118,7 +118,7 @@ export default function Navbar({
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold text-base md:text-lg shadow-lg"
+                className="w-9 cursor-pointer h-9 md:w-11 md:h-11 rounded-full bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold text-base md:text-lg shadow-lg"
               >
                 {initial}
               </button>
@@ -126,7 +126,7 @@ export default function Navbar({
               {showMenu && (
                 <div className="absolute z-50 right-0 mt-3 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
                   <div className="px-4 py-3 border-b dark:border-slate-700">
-                    <p className="flex items-center text-xl font-bold">
+                    <p className="flex cursor-pointer items-center text-xl font-bold  dark:text-sky-600 dark:hover:bg-gray-700 hover:bg-slate-400 dark:bg-slate-900">
                       <User className="mr-1" />
                       {username}
                     </p>
@@ -134,7 +134,7 @@ export default function Navbar({
 
                   <button
                     onClick={logout}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"
+                    className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"
                   >
                     <LogOut size={18} />
                     Logout
