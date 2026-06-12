@@ -89,7 +89,7 @@ export default function Navbar({
           {/* THEME */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="p-2 rounded-xl hover:bg-slate-100 dark:text-amber-500 dark:hover:bg-slate-800 transition"
           >
             {theme === "dark" ? <Sun /> : <Moon />}
           </button>
