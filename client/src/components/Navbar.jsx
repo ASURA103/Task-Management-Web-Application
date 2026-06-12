@@ -125,8 +125,8 @@ export default function Navbar({
 
               {showMenu && (
                 <div className="absolute z-50 right-0 mt-3 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-                  <div className="px-4 py-3 border-b dark:text-sky-600 dark:hover:bg-gray-700 hover:bg-slate-400 dark:bg-slate-900 dark:border-slate-700">
-                    <p className="flex cursor-pointer items-center text-xl font-bold ">
+                  <div className="  border-b dark:text-sky-600 dark:hover:bg-gray-700 hover:bg-slate-400 dark:bg-slate-900 dark:border-slate-700">
+                    <p className="flex ml-1 cursor-pointer items-center text-xl font-bold ">
                       <User className="mr-1" />
                       {username}
                     </p>
