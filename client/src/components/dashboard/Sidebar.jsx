@@ -27,6 +27,7 @@ export default function Sidebar({
         
         mt-35
         md:mt-20
+        md:static
         fixed
         left-0
         top-0

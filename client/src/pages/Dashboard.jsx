@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useState("");
 
+  // ✅ FINAL FILTER STATE
   const [filters, setFilters] = useState({
     priority: [],
     status: [],
@@ -65,19 +66,37 @@ export default function Dashboard() {
       return true;
     })();
 
-    return searchMatch && priorityMatch && statusMatch && pinnedMatch && dueMatch;
+    return (
+      searchMatch && priorityMatch && statusMatch && pinnedMatch && dueMatch
+    );
   });
 
   // ================= GROUPING =================
   const pinned = filteredTasks.filter((task) => task.isPinned);
-  const high = filteredTasks.filter((task) => !task.isPinned && task.priority === "high");
-  const medium = filteredTasks.filter((task) => !task.isPinned && task.priority === "medium");
-  const low = filteredTasks.filter((task) => !task.isPinned && task.priority === "low");
+
+  const high = filteredTasks.filter(
+    (task) => !task.isPinned && task.priority === "high",
+  );
+
+  const medium = filteredTasks.filter(
+    (task) => !task.isPinned && task.priority === "medium",
+  );
+
+  const low = filteredTasks.filter(
+    (task) => !task.isPinned && task.priority === "low",
+  );
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+      {/* NAVBAR */}
+      <Navbar
+        search={search}
+        setSearch={setSearch}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
-      {/* SIDEBAR (overlay system handled inside Sidebar) */}
+      {/* SIDEBAR */}
       <Sidebar
         open={sidebarOpen}
         logout={logout}
@@ -86,196 +105,181 @@ export default function Dashboard() {
         setActiveSection={setActiveSection}
       />
 
-      {/* MOBILE OVERLAY */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40 md:hidden"
-          onClick={() => setSidebarOpen(false)}
+      {/* MAIN */}
+      <main
+        className={`p-6 md:ml-0  ml-40   md:p-8 transition-all duration-300 ease-in-out ${
+          sidebarOpen ? "md:ml-72" : "ml-0"
+        }`}
+      >
+        <div className="mt-8">
+          {/* TASK SECTION */}
+          {activeSection === "tasks" && (
+            <div className="space-y-12">
+              {/* FILTER */}
+              <FilterPanel filters={filters} setFilters={setFilters} />
+
+              {/* CREATE */}
+              <h1
+                onClick={() => setCreateOpen(true)}
+                className="flex cursor-pointer items-center w-40 gap-2 bg-sky-600 text-white px-4 py-2 rounded-xl"
+              >
+                <CreateTaskModal
+                  open={createOpen}
+                  onClose={() => setCreateOpen(false)}
+                  onCreate={async (taskData) => {
+                    await createTask(taskData);
+                    await fetchTasks();
+                  }}
+                />
+                <PlusIcon />
+                Create Task
+              </h1>
+
+              {/* PINNED */}
+              {pinned.length > 0 && (
+                <section>
+                  <h2 className="text-2xl font-bold mb-4 dark:text-white">
+                    📌 Pinned Tasks
+                  </h2>
+
+                  <TaskGrid
+                    tasks={pinned}
+                    onEdit={(task) => {
+                      setSelectedTask(task);
+                      setModalOpen(true);
+                    }}
+                    onDelete={deleteTask}
+                    onPin={pinTask}
+                  />
+                </section>
+              )}
+
+              {/* HIGH */}
+              {high.length > 0 && (
+                <section>
+                  <h2 className="text-2xl font-bold mb-4 dark:text-white">
+                    🔥 High Priority
+                  </h2>
+
+                  <TaskGrid
+                    tasks={high}
+                    onEdit={(task) => {
+                      setSelectedTask(task);
+                      setModalOpen(true);
+                    }}
+                    onDelete={deleteTask}
+                    onPin={pinTask}
+                  />
+                </section>
+              )}
+
+              {/* MEDIUM */}
+              {medium.length > 0 && (
+                <section>
+                  <h2 className="text-2xl font-bold mb-4 dark:text-white">
+                    ⚡ Medium Priority
+                  </h2>
+
+                  <TaskGrid
+                    tasks={medium}
+                    onEdit={(task) => {
+                      setSelectedTask(task);
+                      setModalOpen(true);
+                    }}
+                    onDelete={deleteTask}
+                    onPin={pinTask}
+                  />
+                </section>
+              )}
+
+              {/* LOW */}
+              {low.length > 0 && (
+                <section>
+                  <h2 className="text-2xl font-bold mb-4 dark:text-white">
+                    🌱 Low Priority
+                  </h2>
+
+                  <TaskGrid
+                    tasks={low}
+                    onEdit={(task) => {
+                      setSelectedTask(task);
+                      setModalOpen(true);
+                    }}
+                    onDelete={deleteTask}
+                    onPin={pinTask}
+                  />
+                </section>
+              )}
+
+              {/* EMPTY STATE */}
+              {filteredTasks.length === 0 && (
+                <div className="text-center py-20">
+                  <h2 className="text-3xl font-bold text-slate-500">
+                    No Tasks Found
+                  </h2>
+                  <p className="mt-3 text-slate-400">
+                    Try adjusting filters or create a new task.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* COMPLETED */}
+          {activeSection === "completed" && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow">
+              <h1 className="text-3xl font-bold dark:text-white mb-6">
+                ✅ Completed Tasks
+              </h1>
+
+              <TaskGrid
+                tasks={tasks.filter((task) => task.status === "completed")}
+                onEdit={(task) => {
+                  setSelectedTask(task);
+                  setModalOpen(true);
+                }}
+                onDelete={deleteTask}
+                onPin={pinTask}
+              />
+            </div>
+          )}
+
+          {/* ACCOUNT */}
+          {activeSection === "account" && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow">
+              <h1 className="text-3xl font-bold dark:text-white mb-6">
+                👤 Account
+              </h1>
+
+              <Account />
+            </div>
+          )}
+
+          {/* TRASH */}
+          {activeSection === "trash" && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow">
+              <Trash />
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* MODAL */}
+      {modalOpen && (
+        <TaskModal
+          task={selectedTask}
+          onClose={() => {
+            setModalOpen(false);
+            setSelectedTask(null);
+          }}
+          onSave={async (updatedTask) => {
+            await updateTask(selectedTask._id, updatedTask);
+            await fetchTasks();
+            setModalOpen(false);
+            setSelectedTask(null);
+          }}
         />
       )}
-
-      {/* MAIN AREA (NO ml-* EVER) */}
-      <div className="flex flex-col min-h-screen">
-
-        {/* NAVBAR */}
-        <Navbar
-          search={search}
-          setSearch={setSearch}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
-
-        {/* CONTENT */}
-        <main className="flex-1 p-4 md:p-8 transition-all duration-300">
-          <div className="mt-6">
-
-            {/* TASK SECTION */}
-            {activeSection === "tasks" && (
-              <div className="space-y-12">
-
-                <FilterPanel filters={filters} setFilters={setFilters} />
-
-                {/* CREATE TASK */}
-                <div>
-                  <button
-                    onClick={() => setCreateOpen(true)}
-                    className="flex items-center w-40 gap-2 bg-sky-600 text-white px-4 py-2 rounded-xl"
-                  >
-                    <PlusIcon />
-                    Create Task
-                  </button>
-
-                  <CreateTaskModal
-                    open={createOpen}
-                    onClose={() => setCreateOpen(false)}
-                    onCreate={async (taskData) => {
-                      await createTask(taskData);
-                      await fetchTasks();
-                    }}
-                  />
-                </div>
-
-                {/* PINNED */}
-                {pinned.length > 0 && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 dark:text-white">
-                      📌 Pinned Tasks
-                    </h2>
-                    <TaskGrid
-                      tasks={pinned}
-                      onEdit={(task) => {
-                        setSelectedTask(task);
-                        setModalOpen(true);
-                      }}
-                      onDelete={deleteTask}
-                      onPin={pinTask}
-                    />
-                  </section>
-                )}
-
-                {/* HIGH */}
-                {high.length > 0 && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 dark:text-white">
-                      🔥 High Priority
-                    </h2>
-                    <TaskGrid
-                      tasks={high}
-                      onEdit={(task) => {
-                        setSelectedTask(task);
-                        setModalOpen(true);
-                      }}
-                      onDelete={deleteTask}
-                      onPin={pinTask}
-                    />
-                  </section>
-                )}
-
-                {/* MEDIUM */}
-                {medium.length > 0 && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 dark:text-white">
-                      ⚡ Medium Priority
-                    </h2>
-                    <TaskGrid
-                      tasks={medium}
-                      onEdit={(task) => {
-                        setSelectedTask(task);
-                        setModalOpen(true);
-                      }}
-                      onDelete={deleteTask}
-                      onPin={pinTask}
-                    />
-                  </section>
-                )}
-
-                {/* LOW */}
-                {low.length > 0 && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 dark:text-white">
-                      🌱 Low Priority
-                    </h2>
-                    <TaskGrid
-                      tasks={low}
-                      onEdit={(task) => {
-                        setSelectedTask(task);
-                        setModalOpen(true);
-                      }}
-                      onDelete={deleteTask}
-                      onPin={pinTask}
-                    />
-                  </section>
-                )}
-
-                {/* EMPTY */}
-                {filteredTasks.length === 0 && (
-                  <div className="text-center py-20">
-                    <h2 className="text-3xl font-bold text-slate-500">
-                      No Tasks Found
-                    </h2>
-                    <p className="mt-3 text-slate-400">
-                      Try adjusting filters or create a new task.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* COMPLETED */}
-            {activeSection === "completed" && (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow">
-                <h1 className="text-3xl font-bold dark:text-white mb-6">
-                  ✅ Completed Tasks
-                </h1>
-
-                <TaskGrid
-                  tasks={tasks.filter((t) => t.status === "completed")}
-                  onEdit={(task) => {
-                    setSelectedTask(task);
-                    setModalOpen(true);
-                  }}
-                  onDelete={deleteTask}
-                  onPin={pinTask}
-                />
-              </div>
-            )}
-
-            {/* ACCOUNT */}
-            {activeSection === "account" && (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow">
-                <h1 className="text-3xl font-bold dark:text-white mb-6">
-                  👤 Account
-                </h1>
-                <Account />
-              </div>
-            )}
-
-            {/* TRASH */}
-            {activeSection === "trash" && (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow">
-                <Trash />
-              </div>
-            )}
-          </div>
-        </main>
-
-        {/* MODAL */}
-        {modalOpen && (
-          <TaskModal
-            task={selectedTask}
-            onClose={() => {
-              setModalOpen(false);
-              setSelectedTask(null);
-            }}
-            onSave={async (updatedTask) => {
-              await updateTask(selectedTask._id, updatedTask);
-              await fetchTasks();
-              setModalOpen(false);
-              setSelectedTask(null);
-            }}
-          />
-        )}
-      </div>
     </div>
   );
 }

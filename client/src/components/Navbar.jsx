@@ -124,7 +124,7 @@ export default function Navbar({
               </button>
 
               {showMenu && (
-                <div className="absolute right-0 mt-3 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div className="absolute z-50 right-0 mt-3 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
                   <div className="px-4 py-3 border-b dark:border-slate-700">
                     <p className="flex items-center text-xl font-bold">
                       <User className="mr-1" />
