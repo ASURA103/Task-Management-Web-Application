@@ -107,7 +107,7 @@ export default function Dashboard() {
 
       {/* MAIN */}
       <main
-        className={`p-6 md:ml-0  ml-40   md:p-8 transition-all duration-300 ease-in-out ${
+        className={`p-6   md:p-8 transition-all duration-300 ease-in-out ${
           sidebarOpen ? "md:ml-72" : "ml-0"
         }`}
       >
