@@ -23,21 +23,29 @@ export default function Sidebar({
 
   return (
     <aside
-  className={`
-    fixed top-0 left-0 h-screen z-50
+      className={`
+        
+        mt-35
+        md:mt-20
+        fixed
+        left-0
+        top-0
+        h-[84%]
+        md:h-[90%]
+         md:w-72
+        w-40
+        bg-white
+        dark:bg-slate-950
+        border-r
+        border-slate-200
+        dark:border-slate-800
+        transition-all
+        duration-300
+        z-40
 
-    w-64 md:w-72
-
-    bg-white dark:bg-slate-950
-    border-r border-slate-200 dark:border-slate-800
-
-    transition-transform duration-300 ease-in-out
-
-    ${open ? "translate-x-0" : "-translate-x-full"}
-
-    md:translate-x-0
-  `}
->
+        ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
+      `}
+    >
       <div className="p-6 h-full flex flex-col justify-between">
         {/* TOP */}
         <div className="space-y-5">
