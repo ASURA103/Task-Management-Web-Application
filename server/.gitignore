@@ -1,5 +1,7 @@
 #dependencies
-node_module/
+node_modules/
 
 #env files
 .env
+# logs
+npm-debug.log
