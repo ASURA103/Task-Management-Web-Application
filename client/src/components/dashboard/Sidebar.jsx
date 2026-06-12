@@ -43,7 +43,7 @@ export default function Sidebar({
         duration-300
         z-40
 
-        ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
+        ${open ? "translate-x-0 md:translate-x-0" : "-translate-x-full  md:-translate-x-full"} 
       `}
     >
       <div className="p-6 h-full flex flex-col justify-between">
