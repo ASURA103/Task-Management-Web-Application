@@ -3,10 +3,10 @@
 A modern, full-stack Task Management Web Application built using the MERN stack (MongoDB, Express.js, React.js, Node.js).
 TaskFlow is designed for productivity, allowing users to create, organize, prioritize, and track tasks with a clean UI, secure authentication, and scalable backend architecture.
 
-📸 Preview
-[DEMO VIDEO](Taskmanager_Demo/TaskManager-DEMO.png) !
-[LIGHT MODE](Taskmanager_Demo/demoIMG.png)
-[DARK MODE ](Taskmanager_Demo/demoIMG1.png) !
+📌 Live Demo
+
+🔗 Live Demo:  https://asura-taskflaw.vercel.app/
+!
 
 
 Landing Page
